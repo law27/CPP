@@ -1,2 +1,2 @@
-
-hey
+We students have caught up with some coding in c++ that has made us to fall in love with this LANGUAGE.
+Its unoptimized, COMING SOON...
