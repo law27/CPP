@@ -45,7 +45,7 @@ int main()
           }
       }
   }
-
+//Just a testing of Vim editor... By the way its cool 					
   a = a-c;
   b = b-c;
   a = a+b;
