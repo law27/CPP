@@ -1,154 +1,137 @@
 #include<iostream>
 using namespace std;
 
-struct node{
-    int data;
-    node* right;
-    node* left;
-    int height;
+struct node
+{
+	int data;
+	node* right;
+	node* left;
+	int height;
 };
 
-class BST{
-private:
-    node *root;
+static int height(node* temp)
+{
+	return (temp == NULL) ? 1 : (temp->height);
+}
 
-    int Maximum_Height(int h1, int h2)
-    {
-        return (h1 > h2) ? h1 : h2;
-    }
+class AVL
+{
+	node* root;
+	node* Left_rotate(node* temp)
+	{
+		node* x = temp->right;
+		node* y = x->left;
 
-    int Height(node* temp)
-    {
-        return (temp==NULL) ? 0 : (temp->height);
-    }
+		x->left = temp;
+		temp->right = y;
 
-    int balanceFactor(node* temp)
-    {
-        return (temp==NULL) ? 0 : (Height(node->left) - Height(node->right));
-    }
+		x->height = 1 + ((height(x->right) > height(x->left)) ? height(x->right) : height(x->left));
+		temp->height = 1 + ((height(temp->right) > height(temp->left)) ? height(temp->right) : height(temp->left));
+		return x;
+	}
+	node* Right_rotate(node* temp)
+	{
+		node* x = temp->left;
+		node* y = x->right;
 
-    int Height(node* temp)
-    {
-        return (temp==NULL) ? 0 : (temp->height);
-    }
-    node* Create_Node(int data)
-    {
-        node* temp = new node;
-        temp->data = data;
-        temp->left = temp->right = NULL;
-        temp->height = 1;
-        return temp;
-    }
-    node* Right_Rotate(node* temp)
-    {
-        //Need to be Learn't and Implemented;
-    }
-    node* Insert(node* temp, int data)
-    {
-        if(temp==NULL && root==NULL)
-            root = Create_Node(data);
-        if(temp==NULL)
-            temp = Create_Node(data);
-        else if(data <= temp->data)
-            temp->left = Insert(temp->left,data);
-        else
-            temp->right = Insert(temp->right,data);
+		x->right = temp;
+		temp->left = y;
 
-        //Finding the Height
-        temp->height = 1 + Maximum_Height(Height(temp->left),Height(temp->right));
-        int Balancing_Factor = balanceFactor(temp);
+		x->height = 1 + ((height(x->right) > height(x->left)) ? height(x->right) : height(x->left));
+		temp->height = 1 + ((height(temp->right) > height(temp->left)) ? height(temp->right) : height(temp->left));
+		return x;
+	}
+	static node* New_Node(int data)
+	{
+		node* temp = new node();
+		temp->right = NULL;
+		temp->left = NULL;
+		temp->data = data;
+		temp->height = 1;
+		return temp;
+	}
+	node* left_Case(node* temp,int data)
+	{
+		if (data < temp->left->data) {
+			node* After_Rotation =  Right_rotate(temp);
+			return After_Rotation;
+		}
+		else
+		{
+			temp->left = Left_rotate(temp->left);
+			node* After_Rotation =  Right_rotate(temp);
+			return After_Rotation;
+		}
+	}
+	node* Right_Case(node* temp, int data)
+	{
+		if (data > temp->right->data) {
+			node* After_Rotation =  Left_rotate(temp);
+			return After_Rotation;
+		}
+		else
+		{
+			temp->right = Right_rotate(temp->right);
+			node* After_Rotation =  Left_rotate(temp);
+			return After_Rotation;
+		}
+	}
+	node* Create_Node(int data,node* temp)
+	{
+		if (temp == NULL)
+			temp = New_Node(data);
+		else if (data > temp->data)
+			temp->right = Create_Node(data, temp->right);
+		else
+			temp->left = Create_Node(data, temp->left);
 
-        //CASE_1 :- If the Imbalance is due to the Left Element of left SubTree
-        if(Balancing_Factor < -1 && data < temp->left->data)
-            return Right_Rotate(temp);
-        return temp;
-    }
-    bool Searching(node*temp, int data)
-    {
-        if(temp==NULL)
-            return false;
-        else if(temp->data == data)
-            return true;
-        else if(data<=temp->data)
-            return Searching(temp->left,data);
-        else
-            return Searching(temp->right,data);
-    }
+		int Height = 1 + ((height(temp->right) > height(temp->left)) ? height(temp->right) : height(temp->left));
+
+		int Balance_Factor = ((temp == NULL) ? 0 : height(temp->left) - height(temp->right));
+
+		if (Balance_Factor > 1) {
+			node* Changed_root =  left_Case(temp, data);
+			return Changed_root;
+		}
+		if (Balance_Factor < -1) {
+			node* Changed_root =  Right_Case(temp, data);
+			return Changed_root;
+		}
+
+		return temp;
+	}
 public:
-    BST(){
-    root = NULL;
-    }
-    void Insert(int data)
-    {
-        node* temp = root;
-        Insert(temp,data);
-    }
-    void Searching(int data)
-    {
-        node* temp = root;
-        bool l = Searching(temp,data);
-        if(l)
-            cout<<"Found"<<endl;
-        else
-            cout<<"Not Found"<<endl;
-    }
-    node* Get_Root(){
-        node* temp = root;
-        return temp;
-    }
+	AVL() { root = NULL; }
+	void Create_Node(int data)
+	{
+		root = Create_Node(data, root);
+	}
+	node* get_Root()
+	{
+		return root;
+	}
 };
 
-
-void Inorder_Traversal(node* ptr){
-    if(ptr!=NULL)
- {   Inorder_Traversal(ptr->left);
-
-    cout<<ptr->data<<"  ";
-
-    Inorder_Traversal(ptr->right);}
-}
-
-void PreOrder_Traversal(node* ptr){
-    if(ptr!=NULL)
-    {
-        cout<<ptr->data<<"  ";
-        PreOrder_Traversal(ptr->left);
-        PreOrder_Traversal(ptr->right);
-    }
-}
-
-void PostOrder_Traversal(node* ptr){
-    if(ptr!=NULL)
-    {
-        PostOrder_Traversal(ptr->left);
-        PostOrder_Traversal(ptr->right);
-        cout<<ptr->data<<"  ";
-    }
+void PreOrder(node* temp)
+{
+	if(temp!=NULL)
+	{
+		cout << temp->data << "  ";
+		PreOrder(temp->left);
+		PreOrder(temp->right);
+	}
 }
 
 int main()
 {
-    BST a;
-    int q;
-    cout<<"How many elements you have to Enter into the BST ?"<<endl;
-    cin>>q;
-    int b;
-    for(int i=0; i<q; i++)
-    {
-        cout<<"Enter the "<<i+1<<" Element"<<endl;
-        cin>>b;
-        a.Insert(b);
-        cout<<"Element Inserted into the Tree"<<endl;
-    }
-    node* temp = a.Get_Root();
-    cout<<"The Inorder Traversal is "<<endl;
-    Inorder_Traversal(temp);
-    cout<<endl;
-    cout<<"The Preorder Traversal is "<<endl;
-    PreOrder_Traversal(temp);
-    cout<<endl;
-    cout<<"The Postorder Traversal is "<<endl;
-    PostOrder_Traversal(temp);
-    cout<<endl;
-    return 0;
+	AVL obj;
+	obj.Create_Node(10);
+	obj.Create_Node(20);
+	obj.Create_Node(30);
+	obj.Create_Node(40);
+	obj.Create_Node(50);
+	obj.Create_Node(25);
+	node* root = obj.get_Root();
+	PreOrder(root);
+	return 0;
 }
