@@ -1,47 +1,62 @@
-#include<iostream>
-using namespace std;
+// C++ program to compute factorial of big numbers 
+#include<iostream> 
+using namespace std; 
 
-int multiply(int x , int array[] , int size);
-int main()
-{
-  int max = 400;
-  int array[max];
-  int num ;
-  cin>>num;
-  
-  array[0] = 1;
-  int size = 1;
+// Maximum number of digits in output 
+#define MAX 500 
 
-  for(int x = 1 ; x<=num ; x++)
-  {   cout<<"here"<<" ";
-	  size = multiply(x, array, size);
-	  cout<<"size"<<"=="<<size<<"!!"<<endl;
-  }
-  for(int i = 0 ; i<size ; i++){
-	  cout<<i<<endl;
-  }
-  
-  
-}
- int multiply(int x , int array[], int size)
- {
-  
-   
- }
+int multiply(int x, int res[], int res_size); 
+
+// This function finds factorial of large numbers 
+// and prints them 
+void factorial(int n) 
+{ 
+	int res[MAX]; 
+
+	// Initialize result 
+	res[0] = 1; 
+	int res_size = 1; 
+
+	// Apply simple factorial formula n! = 1 * 2 * 3 * 4...*n 
+	for (int x=2; x<=n; x++) 
+		res_size = multiply(x, res, res_size);               //2,1,1
+
+	cout << "Factorial of given number is \n"; 
+	for (int i=res_size-1; i>=0; i--)                   
+		cout << res[i]; 
+} 
 
 
+int multiply(int x, int res[], int res_size) 
+{ 
+	int carry = 0; // Initialize carry                  
 
+	// One by one multiply n with individual digits of res[] 
+	for (int i=0; i<res_size; i++)                  /*res_size = 1 1)1*2+0=2
+                                                  
+	{ 
+		int prod = res[i] * x + carry; 
 
+		// Store last digit of 'prod' in res[]        
+		res[i] = prod % 10;                           
 
+		// Put rest in carry 
+		carry = prod/10;	 
+	} 
 
+	// Put carry in res and increase result size 
+	while (carry) 
+	{ 
+		res[res_size] = carry%10; 
+		carry = carry/10; 
+		res_size++; 
+	} 
+	return res_size; 
+} 
 
-
-
-
-
-
-
-
-
-
-
+// Driver program 
+int main() 
+{ 
+	factorial(100); 
+	return 0; 
+} 
