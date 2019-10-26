@@ -7,10 +7,12 @@ int main()
     int limit ; 
     cin>>start;
     cin>>limit;
-    for(int i = start; i < limit ; i++)
+    for(int i = start; i < limit ; i++) //45 49
     {
-        cout<<i<<"";
-        if(i!= limit-1)
+        cout<<i<<"";     //  45 , 46 , 47 , 48 
+        if(i != limit-1)
         cout<<",";
+        
     }
+    cout<<endl;
 }
