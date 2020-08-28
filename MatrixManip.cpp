@@ -12,7 +12,7 @@ int main()
 for(int i = 0 ; i< n ;i++)        //0 0 0
 {                                 //4 5 0 
   for(int j = 0 ; j<n ; j++)      //7 8 9    
-	{                               //      
+	{                                    
 	    cin>>array[i][j];
 	}
 }
